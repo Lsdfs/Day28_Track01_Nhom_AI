@@ -1,80 +1,89 @@
-# Day 28 — Dashboard Hành động cho Áp dụng AI
+# Day 28 — Dashboard Hành động cho P-047 Safety Monitoring
 
 ## 1. Thành viên và đóng góp
 
-> Thay các trường `CHƯA CUNG CẤP` bằng thông tin thật trước khi nộp. Không nên tự bịa họ tên hoặc MSSV.
-
-| Họ tên | MSSV | Phần phụ trách | Góp ý đã đưa cho nhóm bạn |
+| Họ tên | MSSV | Phần phụ trách có căn cứ từ lịch sử P-047 | Góp ý cho nhóm bạn |
 |---|---|---|---|
-| CHƯA CUNG CẤP | CHƯA CUNG CẤP | Tổng hợp Gartner-Lite, chẩn đoán readiness và dashboard | Đề nghị đổi “số câu hỏi” từ chỉ số đích thành tín hiệu chẩn đoán; thêm tỷ lệ hoàn thành tác vụ có kiểm chứng |
+| Nguyễn Minh Nhật | 2A202601131 | Dashboard số liệu thật, cache frontend, HITL snapshot và UI giám sát | Chưa có dữ liệu nhóm phản biện trong repo — cần điền trước khi nộp |
+| Nguyễn Trọng Đức | 2A202601673 | Vision worker, tracking state v2, GPU/RunPod và camera-scoped event workflow | Chưa có dữ liệu nhóm phản biện trong repo — cần điền trước khi nộp |
+| Chu Thị Yến Khanh | 2A202601739 | Test evidence, tài liệu, migration, event synchronization và quản trị tài khoản | Chưa có dữ liệu nhóm phản biện trong repo — cần điền trước khi nộp |
+| Nguyễn Tuấn Hùng | 2A202601194 | AI service, chuyển model YOLO11n Safety KD và staging | Chưa có dữ liệu nhóm phản biện trong repo — cần điền trước khi nộp |
 
-Nhóm phản biện: `CHƯA CUNG CẤP`. Phần phản biện trong bài hiện là phiên tự kiểm tra chéo theo rubric; cần thay bằng tên nhóm thật nếu giảng viên yêu cầu.
+Phần phụ trách được tóm tắt từ `git shortlog` và commit history của P-047, không phải phân công tự khai. Tên nhóm phản biện và góp ý thực tế chưa tồn tại trong tài liệu nguồn nên không được tự bịa.
 
 ## 2. Phạm vi
 
-- Sản phẩm AI: trợ lý tra cứu quy định và tài liệu nội bộ có trích nguồn.
-- Nhóm người dùng chính: nhân viên vận hành mới trong 90 ngày đầu.
-- Quy trình: (1) tiếp nhận câu hỏi, (2) truy xuất tài liệu, (3) soạn câu trả lời có trích dẫn, (4) người dùng xác nhận/đánh dấu chưa giải quyết.
-- Ngoài phạm vi: tư vấn pháp lý, quyết định nhân sự, tự động sửa tài liệu nguồn và câu trả lời không có tài liệu kiểm chứng.
+- **Sản phẩm AI:** P-047 Safety Monitoring — hệ thống Computer Vision hỗ trợ giám sát PPE và vùng cấm trong nhà máy.
+- **Nhóm người dùng chính:** `safety_manager`; `system_admin` cấu hình/vận hành và `area_manager` theo dõi khu vực được giao.
+- **Bốn quy trình:** (1) upload và gán media cho camera logic, (2) cấu hình PPE/vùng cấm, (3) chạy inference và tạo cảnh báo, (4) HITL xác nhận rồi lưu audit/snapshot đã làm mờ.
+- **Trong phạm vi:** ảnh/video mô phỏng, bốn camera logic, phát hiện người/mũ/áo phản quang, tracking, zone rule, realtime WebSocket, chống event trùng và dashboard sự kiện.
+- **Ngoài phạm vi:** camera/PLC thật, tự động dừng máy, nhận dạng danh tính, tuyên bố độ chính xác nhà máy khi US-13 chưa hoàn tất.
+
+Nguồn sản phẩm: `D:\AI-Vin\AI_Builder\P-047` và repository public `https://github.com/AI20K-Build-Phase-Cohort-3/P-047`, tại revision tham chiếu `c929e50` ngày 01/09/2026.
 
 ## 3. Vấn đề, nguyên nhân gốc và bằng chứng
 
-Hiện trạng tham chiếu: công cụ đã được cấp quyền nhưng nhân viên vẫn quay lại tìm thủ công hoặc hỏi đồng nghiệp; câu trả lời thiếu nguồn/ngày cập nhật làm giảm niềm tin. Vì không có dữ liệu doanh nghiệp thật trong đề bài, sheet `Evidence` ghi rõ bộ số liệu pilot mô phỏng để minh họa cách đo; nhóm phải thay bằng log/quan sát/phỏng vấn thật trước khi tuyên bố kết quả thực tế.
+### Vấn đề nghiệp vụ
 
-Hai nguyên nhân gốc được chốt:
+Cán bộ an toàn không thể liên tục theo dõi mọi khu vực có máy dập, xe nâng hoặc hóa chất. Vi phạm PPE và xâm nhập vùng cấm có thể bị bỏ sót hoặc phản ứng chậm. P-047 đã triển khai được workflow kỹ thuật nhưng **chưa đủ bằng chứng để rollout pilot nhà máy**.
 
-1. **Readiness/Gartner-Lite:** độ tin cậy thấp vì quyền sở hữu tài liệu và SLA cập nhật chưa rõ; rollout rộng khi nguồn chưa sẵn sàng.
-2. **Ability + Reinforcement/ADKAR:** người dùng chưa biết kiểm tra trích dẫn và chưa được phản hồi trong luồng công việc; hướng dẫn một lần không tạo hành vi bền vững.
+### Hai nguyên nhân gốc
 
-Bằng chứng đang dùng: pilot mô phỏng gồm 100 tác vụ tra cứu, checklist QA trích dẫn và quan sát thao tác. Baseline minh họa: 42% tác vụ hoàn thành không cần hỏi lại; 58% câu trả lời vượt qua kiểm tra nguồn; 55% yêu cầu được xử lý trong SLA. Đây là số liệu giả định, không phải kết quả của một doanh nghiệp cụ thể.
+1. **Readiness/Gartner-Lite:** dữ liệu đánh giá đại diện, provenance/license và benchmark US-13 vẫn là open gate. Dashboard hiện chỉ có event count; chưa được phép suy diễn compliance khi thiếu mẫu số quan sát bình thường.
+2. **Governance + Ability/ADKAR:** hệ thống đã có HITL, audit và privacy fail-closed, nhưng quy trình vận hành thực tế chưa chứng minh trên camera nhà máy, bốn-camera soak test và SLA xử lý cảnh báo. Người dùng cần biết khi nào xác nhận, báo sai và escalate.
+
+### Bằng chứng có thật trong repo P-047
+
+- Manual functional/UI ngày 01/09/2026: **7/7 case PASS**, gồm PPE, vùng cấm, chống trùng, HITL/privacy, auth, authorization và reconnect.
+- Focused backend tại revision `071c575`: **11/11 checks PASS trong 3,03 giây**.
+- Quality gate rộng: frontend **127/127**, root **33/33**, backend/vision **304 pass và 14 fail đã biết**.
+- Log `data/operational-metrics.jsonl`: 12.292 record; 1.544 inference hoàn thành, 430 inference fail, 834 frame bị drop; P95 inference khoảng **1.306 ms**. Đây chủ yếu là traffic phát triển/test, không phải production KPI.
+- Local `safety_events.db` hiện có **0 sự kiện**, nên chưa thể tính tỷ lệ false alarm hoặc cảnh báo hữu ích một cách trung thực.
 
 ## 4. Cách làm mới và lộ trình 30–60–90 ngày
 
-Thiết kế TO-BE phân vai theo Molllick:
+### Workflow TO-BE và phân vai theo Molllick
 
-- **Người giải quyết:** xác định câu hỏi, đánh giá ngữ cảnh và chịu trách nhiệm kết quả cuối.
-- **AI hỗ trợ:** truy xuất, tóm tắt và luôn kèm tài liệu, đoạn trích, ngày cập nhật.
-- **AI tự động có kiểm soát:** phân loại câu hỏi và chuyển tuyến khi không tìm được nguồn đủ tin cậy; không tự tạo chính sách.
-- **Người kiểm tra/owner:** duyệt nguồn, xử lý phản hồi sai và theo dõi chỉ số.
+- **AI tự động:** lấy mẫu frame, phát hiện person/hat/vest, gắn track, đánh giá rule và mở candidate event; không tự kết luận vi phạm chính thức.
+- **Safety Manager — người giải quyết/người kiểm tra:** xem snapshot đã làm mờ, đối chiếu bối cảnh và chọn “Vi phạm thực tế” hoặc “Bình thường / báo sai”.
+- **Area Manager — người chịu trách nhiệm hành động:** nhận sự kiện đã xác nhận thuộc khu vực được giao, xử lý và đóng sự kiện.
+- **System Admin/AI Governance:** cấu hình nguồn/rule, theo dõi operational metrics, kiểm soát quyền, retention và quyết định rollout.
 
-Ba thay đổi bắt buộc:
+### Ba thay đổi bắt buộc
 
-1. Chỉ trả lời khi có trích dẫn; nếu không đủ bằng chứng thì từ chối có cấu trúc và chuyển owner.
-2. Gắn owner + SLA cho từng bộ tài liệu, kiểm tra quyền và độ mới trước khi mở rộng rollout.
-3. Thêm nút “đã giải quyết/chưa giải quyết”, lý do thất bại và hàng đợi QA ngay trong workflow.
+1. Bổ sung ground-truth protocol US-13 và metric alert precision/recall; không dùng login, số frame hay event count làm bằng chứng giá trị.
+2. Gắn SLA từ `unacknowledged → acknowledged/resolved`, owner theo camera/khu vực và escalation khi quá hạn.
+3. Chỉ mở rộng rollout sau khi vượt quality gate, privacy gate và soak test; tiếp tục fail-closed khi redaction hoặc Vision provider lỗi.
 
-Lộ trình:
+| Giai đoạn | Mục tiêu | Hành động | Dấu hiệu hoàn thành | Owner |
+|---|---|---|---|---|
+| 0–30 ngày | Tạo baseline đáng tin | Chốt dataset/provenance; gán nhãn ground truth; sửa hoặc phân loại 14 lỗi; browser UAT end-to-end | US-13 protocol ký duyệt; ≥200 scenario có nhãn; không còn blocker Sev-1/2 | Vision Lead + QA Lead |
+| 31–60 ngày | Pilot hẹp có HITL | Chạy 1 khu vực/1 ca; đo precision, recall, false alarm, time-to-review và privacy recall | Alert precision ≥85%; recall critical ≥95%; review SLA ≥90% | Safety Manager + Product Owner |
+| 61–90 ngày | Mở rộng có điều kiện | Soak bốn camera 30 phút; đo freshness/P95; diễn tập escalation/rollback | P95 cảnh báo ≤2 giây; 0 snapshot lộ danh tính; gate tiếp tục/sửa/dừng | AI Governance Lead |
 
-| Giai đoạn | Mục tiêu | Dấu hiệu hoàn thành | Owner |
-|---|---|---|---|
-| 0–30 ngày | Chuẩn hóa nguồn và luồng TO-BE | 100% bộ tài liệu có owner/SLA; pilot 20 người | Knowledge Manager |
-| 31–60 ngày | Pilot có kiểm soát và huấn luyện tại chỗ | ≥75% câu trả lời qua QA; ≥65% tác vụ hoàn thành | Product Owner |
-| 61–90 ngày | Mở rộng theo cổng kiểm soát | Đạt cả hai metric trong 2 tuần liên tiếp; có quyết định tiếp tục/sửa/dừng | AI Governance Lead |
+## 5. Chỉ số
 
-## 5. Chỉ số và quyết định
+Dashboard v2: `dashboard/dashboard_hanh_dong_v2.xlsx`.
 
-Dashboard v2 nằm tại `dashboard/dashboard_hanh_dong_v2.xlsx`.
+- **Product metric:** tỷ lệ cảnh báo hữu ích được HITL xác nhận — baseline chưa đủ mẫu (`0` persisted event trong local DB), target ≥85% ở ngày 60.
+- **Product safety metric:** recall tình huống critical trên tập ground truth — baseline chưa đo vì US-13 là open gate, target ≥95%.
+- **Workflow metric:** tỷ lệ inference hoàn thành — baseline log phát triển `1.544 / (1.544 + 430) = 78,2%`, target ≥99%.
+- **Workflow metric:** P95 inference latency — baseline khoảng 1.306 ms, target ≤1.000 ms; end-to-end alert target ≤2 giây.
+- **Quality gate:** 304/318 backend/vision test pass (95,6%); phải xử lý/phân loại 14 lỗi trước pilot.
 
-- Product metric: **Tỷ lệ hoàn thành tác vụ không cần hỏi lại** — baseline 42%, target 70% ngày 90.
-- Workflow metric: **Tỷ lệ câu trả lời vượt QA nguồn** — baseline 58%, target 90% ngày 60.
-- Guardrail: tỷ lệ yêu cầu chuyển tuyến đúng ≤15% và không có sự cố nghiêm trọng do câu trả lời không nguồn.
+Mỗi metric trong workbook có baseline, target, nguồn, owner và hành động cụ thể nếu chỉ số xấu. Workbook cũng ghi rõ đâu là số liệu test/development và đâu là dữ liệu pilot cần thu.
 
-Mỗi dòng metric trong dashboard có baseline, target, nguồn, tần suất, owner và hành động khi xấu. Login/số câu hỏi chỉ được giữ làm tín hiệu chẩn đoán, không dùng làm thước đo giá trị.
+## 6. Quyết định
 
-## 6. Quyết định và phản biện
+**SỬA trước khi pilot; không rollout nhà máy lúc này.** P-047 đã chứng minh các luồng chức năng cốt lõi nhưng chưa chứng minh chất lượng model trên dữ liệu đại diện, false-alarm/recall thực tế, privacy recall và năng lực bốn camera. Memo tại `memo/memo_quyet_dinh.md` ghi rõ gate, owner và hai thay đổi từ v1 sang v2.
 
-Quyết định hiện tại: **SỬA rồi tiếp tục pilot có kiểm soát**. Không rollout rộng cho đến khi metric QA nguồn đạt ≥75% trong hai tuần liên tiếp. Chi tiết lý do, hai thay đổi sau kiểm tra chéo và bước tiếp theo theo owner nằm trong `memo/memo_quyet_dinh.md`.
-
-## Cấu trúc repo
+## Cấu trúc bài nộp
 
 ```text
 Day28_Track01_Nhom_AI/
 ├── README.md
 ├── dashboard/
 │   ├── dashboard_hanh_dong_v2.xlsx
-│   └── v1/
-│       └── dashboard_hanh_dong_v1.xlsx
-└── memo/
-    └── memo_quyet_dinh.md
+│   └── v1/dashboard_hanh_dong_v1.xlsx
+└── memo/memo_quyet_dinh.md
 ```
-
