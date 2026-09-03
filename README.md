@@ -4,10 +4,8 @@
 
 | Họ tên | MSSV | Phần phụ trách có căn cứ từ lịch sử P-047 | Góp ý cho nhóm bạn |
 |---|---|---|---|
-| Nguyễn Minh Nhật | 2A202601131 | Dashboard số liệu thật, cache frontend, HITL snapshot và UI giám sát | Chưa có dữ liệu nhóm phản biện trong repo — cần điền trước khi nộp |
 | Nguyễn Trọng Đức | 2A202601673 | Vision worker, tracking state v2, GPU/RunPod và camera-scoped event workflow | Chưa có dữ liệu nhóm phản biện trong repo — cần điền trước khi nộp |
 | Chu Thị Yến Khanh | 2A202601739 | Test evidence, tài liệu, migration, event synchronization và quản trị tài khoản | Chưa có dữ liệu nhóm phản biện trong repo — cần điền trước khi nộp |
-| Nguyễn Tuấn Hùng | 2A202601194 | AI service, chuyển model YOLO11n Safety KD và staging | Chưa có dữ liệu nhóm phản biện trong repo — cần điền trước khi nộp |
 
 Phần phụ trách được tóm tắt từ `git shortlog` và commit history của P-047, không phải phân công tự khai. Tên nhóm phản biện và góp ý thực tế chưa tồn tại trong tài liệu nguồn nên không được tự bịa.
 
