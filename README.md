@@ -40,38 +40,38 @@ Cán bộ an toàn không thể liên tục theo dõi mọi khu vực có máy d
 - Log `data/operational-metrics.jsonl`: 12.292 record; 1.544 inference hoàn thành, 430 inference fail, 834 frame bị drop; P95 inference khoảng **1.306 ms**. Đây chủ yếu là traffic phát triển/test, không phải production KPI.
 - Local `safety_events.db` hiện có **0 sự kiện**, nên chưa thể tính tỷ lệ false alarm hoặc cảnh báo hữu ích một cách trung thực.
 
-## 4. Cách làm mới và lộ trình 30–60–90 ngày
+## 4. Đề xuất cải tiến và kế hoạch 30–60–90 ngày
 
-### Workflow TO-BE và phân vai theo Molllick
+### Quy trình mục tiêu và phân công vai trò theo Mollick
 
-- **AI tự động:** lấy mẫu frame, phát hiện person/hat/vest, gắn track, đánh giá rule và mở candidate event; không tự kết luận vi phạm chính thức.
-- **Safety Manager — người giải quyết/người kiểm tra:** xem snapshot đã làm mờ, đối chiếu bối cảnh và chọn “Vi phạm thực tế” hoặc “Bình thường / báo sai”.
-- **Area Manager — người chịu trách nhiệm hành động:** nhận sự kiện đã xác nhận thuộc khu vực được giao, xử lý và đóng sự kiện.
-- **System Admin/AI Governance:** cấu hình nguồn/rule, theo dõi operational metrics, kiểm soát quyền, retention và quyết định rollout.
+- **AI đảm nhận khâu tự động:** lấy mẫu khung hình, nhận diện người/mũ/áo phản quang, theo dõi đối tượng, áp dụng quy tắc và tạo sự kiện ứng viên. AI chỉ đưa ra gợi ý, không tự xác nhận một vi phạm chính thức.
+- **Safety Manager kiểm tra và ra quyết định:** xem ảnh chụp đã được làm mờ, đánh giá ngữ cảnh rồi phân loại sự kiện là “Vi phạm thực tế” hoặc “Bình thường / báo sai”.
+- **Area Manager tổ chức xử lý:** tiếp nhận những sự kiện đã được xác nhận trong khu vực phụ trách, thực hiện biện pháp khắc phục và hoàn tất sự kiện.
+- **System Admin/AI Governance giám sát hệ thống:** thiết lập nguồn dữ liệu và quy tắc, theo dõi chỉ số vận hành, quản lý phân quyền và thời gian lưu trữ, đồng thời phê duyệt việc mở rộng triển khai.
 
-### Ba thay đổi bắt buộc
+### Ba cải tiến cần hoàn thành
 
-1. Bổ sung ground-truth protocol US-13 và metric alert precision/recall; không dùng login, số frame hay event count làm bằng chứng giá trị.
-2. Gắn SLA từ `unacknowledged → acknowledged/resolved`, owner theo camera/khu vực và escalation khi quá hạn.
-3. Chỉ mở rộng rollout sau khi vượt quality gate, privacy gate và soak test; tiếp tục fail-closed khi redaction hoặc Vision provider lỗi.
+1. Hoàn thiện quy trình ground truth US-13 và bổ sung các chỉ số precision/recall cho cảnh báo. Lượt đăng nhập, số frame hay tổng số event chỉ phản ánh mức độ hoạt động, không được dùng để khẳng định giá trị sản phẩm.
+2. Thiết lập SLA cho toàn bộ vòng đời `unacknowledged → acknowledged/resolved`, chỉ định người phụ trách theo camera/khu vực và thực hiện chuyển cấp khi quá thời hạn.
+3. Chỉ cho phép mở rộng triển khai khi hệ thống đạt các ngưỡng về chất lượng, quyền riêng tư và kiểm thử sức bền. Nếu không thể làm mờ dữ liệu nhận dạng hoặc dịch vụ Vision gặp lỗi, hệ thống phải duy trì cơ chế fail-closed.
 
 | Giai đoạn | Mục tiêu | Hành động | Dấu hiệu hoàn thành | Owner |
 |---|---|---|---|---|
-| 0–30 ngày | Tạo baseline đáng tin | Chốt dataset/provenance; gán nhãn ground truth; sửa hoặc phân loại 14 lỗi; browser UAT end-to-end | US-13 protocol ký duyệt; ≥200 scenario có nhãn; không còn blocker Sev-1/2 | Vision Lead + QA Lead |
-| 31–60 ngày | Pilot hẹp có HITL | Chạy 1 khu vực/1 ca; đo precision, recall, false alarm, time-to-review và privacy recall | Alert precision ≥85%; recall critical ≥95%; review SLA ≥90% | Safety Manager + Product Owner |
-| 61–90 ngày | Mở rộng có điều kiện | Soak bốn camera 30 phút; đo freshness/P95; diễn tập escalation/rollback | P95 cảnh báo ≤2 giây; 0 snapshot lộ danh tính; gate tiếp tục/sửa/dừng | AI Governance Lead |
+| 0–30 ngày | Xây dựng baseline đáng tin cậy | Xác nhận dataset và provenance; gán nhãn ground truth; khắc phục hoặc phân loại 14 lỗi; thực hiện browser UAT end-to-end | Quy trình US-13 được phê duyệt; có ít nhất 200 tình huống đã gán nhãn; không còn blocker Sev-1/2 | Vision Lead + QA Lead |
+| 31–60 ngày | Thử nghiệm hẹp với HITL | Pilot tại một khu vực trong một ca; đo precision, recall, false alarm, time-to-review và privacy recall | Alert precision ≥85%; critical recall ≥95%; tỷ lệ review đúng SLA ≥90% | Safety Manager + Product Owner |
+| 61–90 ngày | Mở rộng theo điều kiện | Chạy soak test bốn camera trong 30 phút; đo freshness/P95; diễn tập quy trình escalation và rollback | P95 cảnh báo ≤2 giây; không có snapshot lộ danh tính; đủ căn cứ để quyết định tiếp tục/sửa/dừng | AI Governance Lead |
 
-## 5. Chỉ số
+## 5. Hệ thống chỉ số theo dõi
 
-Dashboard v2: `dashboard/dashboard_hanh_dong_v2.xlsx`.
+Các chỉ số chi tiết được trình bày trong `dashboard/dashboard_hanh_dong_v2.xlsx`.
 
-- **Product metric:** tỷ lệ cảnh báo hữu ích được HITL xác nhận — baseline chưa đủ mẫu (`0` persisted event trong local DB), target ≥85% ở ngày 60.
-- **Product safety metric:** recall tình huống critical trên tập ground truth — baseline chưa đo vì US-13 là open gate, target ≥95%.
-- **Workflow metric:** tỷ lệ inference hoàn thành — baseline log phát triển `1.544 / (1.544 + 430) = 78,2%`, target ≥99%.
-- **Workflow metric:** P95 inference latency — baseline khoảng 1.306 ms, target ≤1.000 ms; end-to-end alert target ≤2 giây.
-- **Quality gate:** 304/318 backend/vision test pass (95,6%); phải xử lý/phân loại 14 lỗi trước pilot.
+- **Chỉ số sản phẩm:** theo dõi tỷ lệ cảnh báo hữu ích sau khi được HITL xác nhận. Cơ sở dữ liệu cục bộ hiện có `0` sự kiện được lưu nên chưa thể lập baseline; mục tiêu đến ngày 60 là đạt ít nhất 85%.
+- **Chỉ số an toàn sản phẩm:** đo recall của các tình huống critical trên tập ground truth. Chỉ số này chưa có baseline do gate US-13 vẫn chưa được hoàn tất; ngưỡng mục tiêu là tối thiểu 95%.
+- **Chỉ số vận hành — tỷ lệ hoàn thành inference:** log trong môi trường phát triển cho baseline `1.544 / (1.544 + 430) = 78,2%`; mục tiêu là từ 99% trở lên.
+- **Chỉ số vận hành — độ trễ inference P95:** baseline hiện tại xấp xỉ 1.306 ms, trong khi mục tiêu là không quá 1.000 ms; toàn bộ luồng cảnh báo end-to-end phải hoàn tất trong 2 giây.
+- **Cổng chất lượng:** backend/vision hiện vượt qua 304/318 bài test, tương đương 95,6%. Toàn bộ 14 lỗi còn lại phải được khắc phục hoặc phân loại trước khi bắt đầu pilot.
 
-Mỗi metric trong workbook có baseline, target, nguồn, owner và hành động cụ thể nếu chỉ số xấu. Workbook cũng ghi rõ đâu là số liệu test/development và đâu là dữ liệu pilot cần thu.
+Với từng chỉ số, workbook nêu rõ baseline, mục tiêu, nguồn dữ liệu, người phụ trách và phương án xử lý khi kết quả không đạt. Tài liệu cũng phân biệt số liệu thu từ môi trường test/development với dữ liệu cần thu thập trong giai đoạn pilot.
 
 ## 6. Quyết định
 
