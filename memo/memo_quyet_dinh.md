@@ -15,11 +15,12 @@ P-047 giảm gánh nặng quan sát thủ công bằng Computer Vision phát hi�
 
 ## 2. Framework và bằng chứng
 
-- **Molllick:** AI phát hiện/gợi ý; Safety Manager kiểm tra và ra quyết định; Area Manager chịu trách nhiệm xử lý; Governance quyết định rollout.
+- **Mollick:** AI phát hiện/gợi ý; Safety Manager kiểm tra và ra quyết định; Area Manager chịu trách nhiệm xử lý; Governance quyết định rollout.
 - **Bằng chứng chức năng:** 7/7 manual case PASS; 11/11 focused backend checks PASS trong 3,03 giây.
 - **Quality evidence:** frontend 127/127, root 33/33, backend/vision 304 pass và 14 fail đã biết.
 - **Operational evidence:** log phát triển có 1.544 inference completed, 430 failed, 834 dropped; success proxy 78,2%; P95 inference khoảng 1.306 ms.
-- **Thiếu bằng chứng sản phẩm:** local DB có 0 persisted safety event; chưa thể tính alert precision, false-alarm rate, critical recall hay review SLA.
+- **Thiếu bằng chứng sản phẩm:** local DB có 0 persisted safety event, vì vậy baseline alert precision, false-alarm rate, critical recall và review SLA là **chưa đo**, không phải 0%.
+- **Privacy evidence:** MAN-04 và kiểm thử fail-closed đã pass, nhưng 1 test không đủ để tuyên bố baseline privacy 100% trên dữ liệu pilot.
 
 ## 3. Thay đổi từ v1 sang v2 sau kiểm tra chéo
 

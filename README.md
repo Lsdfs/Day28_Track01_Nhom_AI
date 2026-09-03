@@ -65,17 +65,26 @@ Cán bộ an toàn không thể liên tục theo dõi mọi khu vực có máy d
 
 Các chỉ số chi tiết được trình bày trong `dashboard/dashboard_hanh_dong_v2.xlsx`.
 
-- **Chỉ số sản phẩm:** theo dõi tỷ lệ cảnh báo hữu ích sau khi được HITL xác nhận. Cơ sở dữ liệu cục bộ hiện có `0` sự kiện được lưu nên chưa thể lập baseline; mục tiêu đến ngày 60 là đạt ít nhất 85%.
-- **Chỉ số an toàn sản phẩm:** đo recall của các tình huống critical trên tập ground truth. Chỉ số này chưa có baseline do gate US-13 vẫn chưa được hoàn tất; ngưỡng mục tiêu là tối thiểu 95%.
-- **Chỉ số vận hành — tỷ lệ hoàn thành inference:** log trong môi trường phát triển cho baseline `1.544 / (1.544 + 430) = 78,2%`; mục tiêu là từ 99% trở lên.
-- **Chỉ số vận hành — độ trễ inference P95:** baseline hiện tại xấp xỉ 1.306 ms, trong khi mục tiêu là không quá 1.000 ms; toàn bộ luồng cảnh báo end-to-end phải hoàn tất trong 2 giây.
-- **Cổng chất lượng:** backend/vision hiện vượt qua 304/318 bài test, tương đương 95,6%. Toàn bộ 14 lỗi còn lại phải được khắc phục hoặc phân loại trước khi bắt đầu pilot.
+- **Chỉ số sản phẩm — Product Owner:** tỷ lệ cảnh báo hữu ích sau khi được HITL xác nhận. Baseline: **chưa đo (0 event, không đồng nghĩa 0%)**; nguồn là trạng thái `safety_events`; mục tiêu đến ngày 60 là ≥85%.
+- **Chỉ số an toàn — Vision Lead:** recall tình huống critical trên tập ground truth. Baseline: **chưa đo do US-13 còn mở**; nguồn là held-out evaluation US-13; mục tiêu ≥95%.
+- **Chỉ số vận hành — Platform Owner:** tỷ lệ hoàn thành inference có baseline `1.544 / (1.544 + 430) = 78,2%`, nguồn `operational-metrics.jsonl`; mục tiêu ≥99%.
+- **Chỉ số vận hành — Vision Lead:** độ trễ inference P95 có baseline khoảng 1.306 ms, nguồn `operational-metrics.jsonl`; mục tiêu ≤1.000 ms và toàn bộ luồng cảnh báo end-to-end ≤2 giây.
+- **Cổng riêng tư — Privacy Owner:** hiện mới có 1/1 test MAN-04 PASS, chưa đủ để suy rộng thành baseline 100%; mục tiêu là 100% snapshot trong mẫu privacy audit của pilot đạt yêu cầu.
+- **Cổng chất lượng — QA Lead:** backend/vision hiện vượt qua 304/318 bài test, tương đương 95,6%. Toàn bộ 14 lỗi còn lại phải được khắc phục hoặc phân loại trước khi bắt đầu pilot.
 
 Với từng chỉ số, workbook nêu rõ baseline, mục tiêu, nguồn dữ liệu, người phụ trách và phương án xử lý khi kết quả không đạt. Tài liệu cũng phân biệt số liệu thu từ môi trường test/development với dữ liệu cần thu thập trong giai đoạn pilot.
 
 ## 6. Quyết định
 
-**SỬA trước khi pilot; không rollout nhà máy lúc này.** P-047 đã chứng minh các luồng chức năng cốt lõi nhưng chưa chứng minh chất lượng model trên dữ liệu đại diện, false-alarm/recall thực tế, privacy recall và năng lực bốn camera. Memo tại `memo/memo_quyet_dinh.md` ghi rõ gate, owner và hai thay đổi từ v1 sang v2.
+**SỬA trước khi pilot; không rollout nhà máy lúc này.** P-047 đã chứng minh các luồng chức năng cốt lõi nhưng chưa chứng minh chất lượng model trên dữ liệu đại diện, false-alarm/recall thực tế, privacy recall và năng lực bốn camera.
+
+Ba thay đổi từ v1 sang v2 sau kiểm tra chéo:
+
+1. Thay activity metric bằng alert usefulness, critical recall và review SLA.
+2. Tách functional-test evidence khỏi bằng chứng pilot/capacity và ghi rõ giới hạn suy diễn.
+3. Bổ sung owner, stop gate, privacy gate và hành động escalation khi chỉ số xấu.
+
+Chi tiết quyết định và bước tiếp theo nằm trong `memo/memo_quyet_dinh.md`.
 
 ## Cấu trúc bài nộp
 
