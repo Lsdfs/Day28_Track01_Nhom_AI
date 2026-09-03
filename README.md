@@ -83,7 +83,9 @@ Mỗi metric trong workbook có baseline, target, nguồn, owner và hành độ
 Day28_Track01_Nhom_AI/
 ├── README.md
 ├── dashboard/
-│   ├── dashboard_hanh_dong_v2.xlsx
-│   └── v1/dashboard_hanh_dong_v1.xlsx
-└── memo/memo_quyet_dinh.md
+│   └── dashboard_hanh_dong_v2.xlsx
+├── memo/
+│   └── memo_quyet_dinh.md
+└── v1/
+    └── dashboard_hanh_dong_v1.xlsx
 ```
