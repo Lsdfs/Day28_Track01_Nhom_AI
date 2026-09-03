@@ -2,12 +2,12 @@
 
 ## 1. Thành viên và đóng góp
 
-| Họ tên | MSSV | Phần phụ trách có căn cứ từ lịch sử P-047 | Góp ý cho nhóm bạn |
+| Họ tên | MSSV | Phần phụ trách | Góp ý đã đưa cho nhóm bạn |
 |---|---|---|---|
-| Nguyễn Trọng Đức | 2A202601673 | Vision worker, tracking state v2, GPU/RunPod và camera-scoped event workflow | Chưa có dữ liệu nhóm phản biện trong repo — cần điền trước khi nộp |
-| Chu Thị Yến Khanh | 2A202601739 | Test evidence, tài liệu, migration, event synchronization và quản trị tài khoản | Chưa có dữ liệu nhóm phản biện trong repo — cần điền trước khi nộp |
+| Nguyễn Trọng Đức | 2A202601673 | Viết mục 4: cách làm mới và lộ trình 30–60–90 ngày; viết mục 5: hệ thống chỉ số theo dõi | Chưa có dữ liệu phản biện trong lịch sử repo — cần điền góp ý thực tế trước khi nộp |
+| Chu Thị Yến Khanh | 2A202601739 | Xây dựng dashboard v1/v2 và memo; viết mục 1–3, mục 6; tổng hợp README và chuẩn hóa cấu trúc repo | Chưa có dữ liệu phản biện trong lịch sử repo — cần điền góp ý thực tế trước khi nộp |
 
-Phần phụ trách được tóm tắt từ `git shortlog` và commit history của P-047, không phải phân công tự khai. Tên nhóm phản biện và góp ý thực tế chưa tồn tại trong tài liệu nguồn nên không được tự bịa.
+Phần phụ trách được đối chiếu từ commit history của chính repository bài Lab này: commit `e46f170` ghi nhận phần chỉnh sửa mục 4–5 của Nguyễn Trọng Đức; các commit còn lại ghi nhận phần xây dựng, hiệu chỉnh và chuẩn hóa bộ bài của Chu Thị Yến Khanh. Lịch sử hiện chỉ ghi nhận commit của hai thành viên. Tên nhóm phản biện và góp ý thực tế chưa có trong repository nên cần bổ sung từ buổi kiểm tra chéo, không tự bịa.
 
 ## 2. Phạm vi
 
