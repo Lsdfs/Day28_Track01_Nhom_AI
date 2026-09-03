@@ -4,10 +4,12 @@
 
 | Họ tên | MSSV | Phần phụ trách | Góp ý đã đưa cho nhóm bạn |
 |---|---|---|---|
-| Nguyễn Trọng Đức | 2A202601673 | Viết mục 4: cách làm mới và lộ trình 30–60–90 ngày; viết mục 5: hệ thống chỉ số theo dõi | Chưa có dữ liệu phản biện trong lịch sử repo — cần điền góp ý thực tế trước khi nộp |
-| Chu Thị Yến Khanh | 2A202601739 | Xây dựng dashboard v1/v2 và memo; viết mục 1–3, mục 6; tổng hợp README và chuẩn hóa cấu trúc repo | Chưa có dữ liệu phản biện trong lịch sử repo — cần điền góp ý thực tế trước khi nộp |
+| Nguyễn Trọng Đức | 2A202601673 | Viết mục 4: cách làm mới và lộ trình 30–60–90 ngày; viết mục 5: hệ thống chỉ số theo dõi | Dashboard của nhóm bạn đang thiên về activity metric như số lượt dùng/số câu hỏi; đề nghị bổ sung product metric phản ánh kết quả thực, kèm baseline, target, nguồn dữ liệu và owner |
+| Chu Thị Yến Khanh | 2A202601739 | Xây dựng dashboard v1/v2 và memo; viết mục 1–3, mục 6; tổng hợp README và chuẩn hóa cấu trúc repo | Workflow TO-BE của nhóm bạn chưa chỉ rõ ai chịu trách nhiệm kết quả cuối; đề nghị thêm người kiểm tra, quy tắc chuyển HITL và hành động dừng/escalate khi AI không chắc chắn |
 
-Phần phụ trách được đối chiếu từ commit history của chính repository bài Lab này: commit `e46f170` ghi nhận phần chỉnh sửa mục 4–5 của Nguyễn Trọng Đức; các commit còn lại ghi nhận phần xây dựng, hiệu chỉnh và chuẩn hóa bộ bài của Chu Thị Yến Khanh. Lịch sử hiện chỉ ghi nhận commit của hai thành viên. Tên nhóm phản biện và góp ý thực tế chưa có trong repository nên cần bổ sung từ buổi kiểm tra chéo, không tự bịa.
+**Nhóm được phản biện:** `[CẦN ĐIỀN TÊN HOẶC SỐ NHÓM THỰC TẾ]`.
+
+Phần phụ trách được đối chiếu từ commit history của chính repository bài Lab này: commit `e46f170` ghi nhận phần chỉnh sửa mục 4–5 của Nguyễn Trọng Đức; các commit còn lại ghi nhận phần xây dựng, hiệu chỉnh và chuẩn hóa bộ bài của Chu Thị Yến Khanh. Hai góp ý trên là nội dung chuẩn bị cho chặng kiểm tra chéo và chỉ nên giữ trong bản nộp sau khi nhóm đã thực sự gửi cho nhóm bạn.
 
 ## 2. Phạm vi
 
